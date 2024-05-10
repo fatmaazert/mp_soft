@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import React, { Suspense } from "react";
+import Spinner from "./components/Spinner";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ErrorPage from "./pages/ErrorPage";
+import { AuthProvider } from "./hooks/useAuth";
 
+const LoginPage = React.lazy(() => import("./pages/LoginPage"));
+const SignupPage = React.lazy(() => import("./pages/SignUpPage"));
+const ReglePage = React.lazy(() =>
+  import("./pages/responsablePages/ReglePage")
+);
+const ProtectedRoute = React.lazy(() => import("./pages/ProtextedPages"));
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Suspense fallback={<Spinner />}>
+        <ToastContainer />
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/profile" element={<ProtectedRoute />} />
+            <Route
+              path="*"
+              element={
+                <ErrorPage
+                  status="404"
+                  message="Page non trouvée"
+                  details="Désolé, nous n'avons pas trouvé la page que vous recherchez"
+                />
+              }
+            />
+          </Routes>
+        </AuthProvider>
+      </Suspense>
+    </>
   );
 }
 
