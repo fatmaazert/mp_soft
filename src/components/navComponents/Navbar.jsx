@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout, CiUser } from "react-icons/ci";
 import { useAuth } from "../../hooks/useAuth";
 import { get } from "../../utils/apiMethods";
 import { rules, rulesPath } from "../../constants";
@@ -36,9 +36,10 @@ function Navbar() {
     };
 
     fetchRules();
-  }, []);
+  }, [user]);
 
-  /*  const getNotifications = async () => {
+  /*
+  const getNotifications = async () => {
     await get(`push-notifications/10`);
   };
 
@@ -98,7 +99,18 @@ function Navbar() {
             MP <span className="font-bold text-danger">Soft</span>
           </h2>
           <nav>
+            <div className="text-xl font-medium mx-4 text-gray-800 flex gap-x-1 items-center">
+              {" "}
+              <span className="font-semibold">Session</span>
+              <span>{user?.username}</span>
+            </div>
             <ul className="flex flex-col p-4 text-gray-800">
+              <div
+                className="text-xl flex cursor-pointer  w-[100%] rounded-full mx-auto p-2 hover:text-white hover:bg-black"
+                onClick={() => navigateTo("compte")}
+              >
+                <CiUser size={25} className="mr-2" /> Modifier mon compte
+              </div>
               {items.map(({ icon, text, path }, index) => {
                 return (
                   <div key={index} className=" py-4">

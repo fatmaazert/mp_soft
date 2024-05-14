@@ -35,7 +35,6 @@ export const typeRegle = [
 
 export const headerRule = [
   "id",
-
   "codope",
   "lp",
   "flcfld",

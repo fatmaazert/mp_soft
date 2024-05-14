@@ -16,7 +16,8 @@ export const AuthProvider = ({ children }) => {
     if (!res) return;
     setUser(res);
     setToken(res.accessToken);
-    navigate("/profile");
+    // refresh the page
+    window.location.replace("/profile");
   };
 
   // call this function to sign out logged in user

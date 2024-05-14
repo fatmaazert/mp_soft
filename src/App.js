@@ -11,7 +11,7 @@ const LoginPage = React.lazy(() => import("./pages/LoginPage"));
 const SignupPage = React.lazy(() => import("./pages/SignUpPage"));
 
 const ProtectedRoute = React.lazy(() => import("./pages/ProtectedPages"));
-
+const Compte = React.lazy(() => import("./pages/Compte"));
 const AdminGestionDesUsers = React.lazy(() =>
   import("./pages/Gestion_des_Users")
 );
@@ -33,6 +33,7 @@ function App() {
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/profile" element={<ProtectedRoute />}>
               <Route index element={<HomePage />} />
+              <Route path="compte" element={<Compte />} />
               <Route path="gestiondesroles" element={<GestionRolePage />} />
               <Route path="history" element={<HistoryPage />} />
               <Route

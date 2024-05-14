@@ -42,7 +42,6 @@ const GestionDesUsers = () => {
 
   const removeUser = async () => {
     await remove("/user/remove-user/" + selectedUser?.id);
-    //setUsers(users.filter((user) => user.id !== selectedUser.id));
     setConfirmationModalOpen(false);
   };
 

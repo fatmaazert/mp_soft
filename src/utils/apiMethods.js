@@ -31,7 +31,8 @@ const post = async (url, data, dispatch) => {
     });
     return response.data;
   } catch (error) {
-    toast.error("Error creating data", {
+    console.log({ error });
+    toast.error(error.response?.data?.message || "Error creating data", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,

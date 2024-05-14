@@ -27,7 +27,6 @@ function LoginForm() {
       password: formData.password,
     };
     await login(loginInput);
-    //navigate("/rule");
   }
   return (
     <>

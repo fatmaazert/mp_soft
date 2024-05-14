@@ -4,22 +4,19 @@ import Title from "../formComponents/Title";
 import AnchorLink from "../formComponents/AnchorLink";
 import Button from "../formComponents/Button";
 import { RiLockPasswordLine } from "react-icons/ri";
-import SelectInput from "../formComponents/SelectInput";
 import IconInput from "../formComponents/IconInput";
 import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { BsPersonVcard } from "react-icons/bs";
-import { rules } from "../../constants";
+import { post } from "../../utils/apiMethods";
 
 function SignUpForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
-    lastName: "",
-    tel: "",
     email: "",
     password: "",
-    role: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -32,11 +29,15 @@ function SignUpForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const registerInput = formData;
-    } catch (error) {
-      console.log(error);
-      toast.error(`${error}`);
+    // check if the confirm password is the same as the current password
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Les mots de passe ne sont pas identiques");
+      return;
+    }
+
+    const res = await post("/api/auth/signup", formData);
+    if (res) {
+      navigate("/");
     }
   };
 
@@ -57,16 +58,6 @@ function SignUpForm() {
                 icon={<BsPersonVcard />}
               />
             </div>
-            <SelectInput
-              name="role"
-              value="id"
-              label="role"
-              onChange={handleChange}
-              className="w-full"
-              required={true}
-              placeholder="Role"
-              options={rules}
-            />
             <IconInput
               id="email"
               type="email"
@@ -76,6 +67,7 @@ function SignUpForm() {
               onChange={handleChange}
               icon={<FaRegUser />}
             />
+
             <IconInput
               id="password"
               type="password"
@@ -86,10 +78,11 @@ function SignUpForm() {
               icon={<RiLockPasswordLine />}
               onChange={handleChange}
             />
+
             <IconInput
-              id="passwordConfirm"
+              id="confirmPassword"
               type="password"
-              name="passwordConfirm"
+              name="confirmPassword"
               className="w-full"
               placeholder="Confirm Password"
               onChange={handleChange}

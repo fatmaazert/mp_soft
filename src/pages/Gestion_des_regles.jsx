@@ -11,6 +11,7 @@ import RegleTable from "../components/regleComponent/RegleTable";
 import UsersModal from "../components/Modals/UsersModal";
 import { FaUserTie } from "react-icons/fa6";
 import { useAuth } from "../hooks/useAuth";
+import AllRegles from "../components/regleComponent/AllReglesComp";
 
 function ReglePage() {
   const [RUBINILIST, setRubiniList] = useState([]);
@@ -122,6 +123,7 @@ function ReglePage() {
   };
   return (
     <>
+      <AllRegles />
       <div className="ml-20">
         <MainTitle opString="Ajout de regles" />
         <form onSubmit={handleSubmit} className="max-w-7xl">
