@@ -9,12 +9,7 @@ import IconInput from "../formComponents/IconInput";
 import { FaRegUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { BsPersonVcard } from "react-icons/bs";
-
-const roles = [
-  { name: "gestionnaire" },
-  { name: "admin" },
-  { name: "responsable" },
-];
+import { rules } from "../../constants";
 
 function SignUpForm() {
   const navigate = useNavigate();
@@ -64,15 +59,13 @@ function SignUpForm() {
             </div>
             <SelectInput
               name="role"
-              value={formData.role}
+              value="id"
+              label="role"
               onChange={handleChange}
               className="w-full"
               required={true}
               placeholder="Role"
-              options={roles?.map((role) => ({
-                value: role.name,
-                label: role.name,
-              }))}
+              options={rules}
             />
             <IconInput
               id="email"

@@ -9,10 +9,19 @@ import { AuthProvider } from "./hooks/useAuth";
 
 const LoginPage = React.lazy(() => import("./pages/LoginPage"));
 const SignupPage = React.lazy(() => import("./pages/SignUpPage"));
-const ReglePage = React.lazy(() =>
-  import("./pages/responsablePages/ReglePage")
+
+const ProtectedRoute = React.lazy(() => import("./pages/ProtectedPages"));
+
+const AdminGestionDesUsers = React.lazy(() =>
+  import("./pages/Gestion_des_Users")
 );
-const ProtectedRoute = React.lazy(() => import("./pages/ProtextedPages"));
+
+const HomePage = React.lazy(() => import("./pages/Home_Page"));
+const GestionReglePage = React.lazy(() => import("./pages/Gestion_des_regles"));
+const GestionRolePage = React.lazy(() => import("./pages/Gestion_de_roles"));
+const GestionUserPage = React.lazy(() => import("./pages/Gestion_des_Users"));
+const HistoryPage = React.lazy(() => import("./pages/History"));
+
 function App() {
   return (
     <>
@@ -22,7 +31,22 @@ function App() {
           <Routes>
             <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/profile" element={<ProtectedRoute />} />
+            <Route path="/profile" element={<ProtectedRoute />}>
+              <Route index element={<HomePage />} />
+              <Route path="gestiondesroles" element={<GestionRolePage />} />
+              <Route path="history" element={<HistoryPage />} />
+              <Route
+                path="gestiondesutilisateurs"
+                element={<GestionUserPage />}
+              />
+              <Route
+                path="validationregles"
+                element={<AdminGestionDesUsers />}
+              />
+              <Route path="notification" element={<HistoryPage />} />
+
+              <Route path="gestiondesregles" element={<GestionReglePage />} />
+            </Route>
             <Route
               path="*"
               element={

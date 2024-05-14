@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const token = localStorage.getItem("token");
+const token = JSON.parse(localStorage.getItem("token"));
 export const baseURL = process.env.REACT_APP_NODE_SERVER_HOST;
 const Client = axios.create({
   baseURL,
@@ -19,8 +19,29 @@ const post = async (url, data, dispatch) => {
 
     response = await Client.post(url, data, {});
 
+    toast.success("Data created successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     return response.data;
   } catch (error) {
+    toast.error("Error creating data", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
     console.log({ error });
   }
 };
@@ -44,10 +65,14 @@ const postMultipart = async (url, data, dispatch) => {
 };
 
 // GET action
-const get = async (url) => {
+const get = async (url, options) => {
   try {
     let response;
-    response = await Client.get(url);
+    if (options) {
+      response = await Client.get(url, options);
+    } else {
+      response = await Client.get(url);
+    }
 
     return response.data;
   } catch (error) {
@@ -94,8 +119,29 @@ const remove = async (url) => {
     let response;
     response = await Client.delete(url, {});
 
+    toast.success("Deleted successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
     return response.data;
   } catch (error) {
+    toast.error("Error deleting", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
     console.log(error);
     return null;
   }
@@ -128,9 +174,6 @@ const login = async (data) => {
     progress: undefined,
     theme: "light",
   });
-  const { username, id, roles, email } = userData;
-  localStorage.setItem("token", userData.accessToken);
-  localStorage.setItem("user", JSON.stringify({ username, id, roles, email }));
 
   return userData;
 };

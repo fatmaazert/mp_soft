@@ -6,6 +6,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
+  const [token, setToken] = useLocalStorage("token", null);
   const navigate = useNavigate();
 
   // call this function when you want to authenticate the user
@@ -14,18 +15,21 @@ export const AuthProvider = ({ children }) => {
     const res = await loginAxios(data);
     if (!res) return;
     setUser(res);
+    setToken(res.accessToken);
     navigate("/profile");
   };
 
   // call this function to sign out logged in user
   const logout = () => {
     setUser(null);
+    setToken(null);
     navigate("/", { replace: true });
   };
 
   const value = useMemo(
     () => ({
       user,
+      token,
       login,
       logout,
     }),

@@ -4,6 +4,7 @@ function SelectInput({
   name,
   value = "",
   options,
+  label,
   onChange,
   className,
   placeholder,
@@ -13,19 +14,18 @@ function SelectInput({
     <>
       <select
         name={name}
-        value={value}
         onChange={onChange}
         className={`py-2 px-4 mb-4 bg-lightGrey rounded-lg focus:outline-none ${className}`}
         required={required}
       >
         {placeholder && (
-          <option disabled={!value} hidden={!value} value="">
+          <option disabled hidden={!value} value="">
             {placeholder}
           </option>
         )}
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
+          <option key={option[value]} value={option[value]}>
+            {option[label]}
           </option>
         ))}
       </select>

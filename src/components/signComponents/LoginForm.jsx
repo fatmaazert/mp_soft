@@ -7,7 +7,6 @@ import Title from "../formComponents/Title";
 import AnchorLink from "../formComponents/AnchorLink";
 import Button from "../formComponents/Button";
 import { useAuth } from "../../hooks/useAuth";
-//import { login } from "../../utils/apiMethods";
 
 function LoginForm() {
   const navigate = useNavigate();

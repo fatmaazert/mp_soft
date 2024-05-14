@@ -1,70 +1,20 @@
-# Getting Started with Create React App
+### Requirements:
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- [x] Notre système doit permettre de :
+      S’authentifier : Le gestionnaire, le responsable ou l’administrateur doit s’authentifier afin de pouvoir accéder à l’application.
+- [x] Créer une règle de gestion : Le système doit permettre au gestionnaire de demander la création d’une nouvelle règle de gestion.
+- [x] Gérer les rôles : Le système doit permettre à l’administrateur d’affecter les rôles à chaque type d’utilisateur.
+- [ ] S’inscrire : L’utilisateur, quelque soit son rôle, doit créer un compte pour pouvoir accéder à l’application.
+- [ ] Gérer le profil : Le système doit permettre à l’utilisateur et à l’administrateur de modifier leurs informations personnelles. (1/2)
+- [ ] Modifier une règle de gestion : Le système doit permettre au gestionnaire de demander la modification d’une règle de gestion existante.
+- [ ] Supprimer une règle de gestion : Le système doit permettre au gestionnaire de demander la suppression d’une règle de gestion existante.
+- [ ] Valider la création d’une règle de gestion : Le système doit permettre au responsable de valider la création d’une nouvelle règle de gestion.
+- [ ] Valider la modification d’une règle de gestion : Le système doit permettre au responsable de valider la modification d’une nouvelle règle de gestion.
+- [ ] Valider la suppression d’une règle de gestion : Le système doit permettre au responsable de valider la suppression d’une nouvelle règle de gestion.
+- [ ] Historique : le gestionnaire ou le responsable peut consulter l’historique de ses transactions (ajout, modification, suppression)
+- [ ] Notification : une alerte s’affiche pour le responsable : une liste des règles à valider
+      une alerte s’affiche pour le gestionnaire : une liste des règles validés ou refusés.
 
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*admin: gestion de roles gestion des utilisateurs
+*gestionnaires : gestion de regle(formulaire) | consulter notification | consulter historique
+\*responsable : gestionnaire+validation des regles
