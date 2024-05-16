@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { get, post, remove } from "../utils/apiMethods";
-import { rules } from "../constants";
+import { rules } from "../constants.cjs";
 import {
   FcManager,
   FcBusinessman,
@@ -74,8 +74,6 @@ const GestionDesRoles = () => {
   };
 
   const handleEnlever = async () => {
-    console.log({ selectedTask, selectedUser });
-
     const result = await remove(
       `/enlever-tache-role?tacheId=${selectedTask}&roleId=${selectedUser}`
     );

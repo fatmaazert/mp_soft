@@ -1,14 +1,12 @@
 import { RiLockPasswordLine } from "react-icons/ri";
-import AnchorLink from "../formComponents/AnchorLink";
 import Button from "../formComponents/Button";
 import IconInput from "../formComponents/IconInput";
 import Modal from "./Modal";
 import { FaRegUser } from "react-icons/fa";
-import SelectInput from "../formComponents/SelectInput";
 import { BsPersonVcard } from "react-icons/bs";
 import Title from "../formComponents/Title";
 import { useEffect, useState } from "react";
-import { rules } from "../../constants";
+import { rules } from "../../constants.cjs";
 import { toast } from "react-toastify";
 import { post, update } from "../../utils/apiMethods";
 

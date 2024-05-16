@@ -11,7 +11,7 @@ import RegleTable from "../components/regleComponent/RegleTable";
 import UsersModal from "../components/Modals/UsersModal";
 import { FaUserTie } from "react-icons/fa6";
 import { useAuth } from "../hooks/useAuth";
-import AllRegles from "../components/regleComponent/AllReglesComp";
+import darkWav from "../admindash.svg";
 
 function ReglePage() {
   const [RUBINILIST, setRubiniList] = useState([]);
@@ -118,12 +118,12 @@ function ReglePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await post(`Regle/${selectedUser}/Add-regle`, formData);
+    const res = await post(`Regle/${selectedUser.id}/Add-regle`, formData);
     console.log({ res });
   };
   return (
     <>
-      <AllRegles />
+      <div className="w-full h-full"></div>
       <div className="ml-20">
         <MainTitle opString="Ajout de regles" />
         <form onSubmit={handleSubmit} className="max-w-7xl">
@@ -286,20 +286,7 @@ function ReglePage() {
                   </option>
                 </select>
               </div>
-              {/* <div className="flex">
-                <div className="pl-2">
-                  <IconInput
-                    className="w-[450px]"
-                    id="SRC"
-                    disabled
-                    type="text"
-                    name="SRC"
-                    value={formData.SRC}
-                    icon={<GrContactInfo />}
-                    placeholder="SRC"
-                  />
-                </div>
-              </div> */}
+
               <div className="flex">
                 <div className="pl-2">
                   <IconInput
@@ -375,6 +362,19 @@ function ReglePage() {
                   ))}
                 </select>
               </div>
+
+              {selectedUser && (
+                <div className="flex">
+                  <div className="pl-2">
+                    <IconInput
+                      className="w-[450px]"
+                      type="text"
+                      value={`Responsable choisi: ${selectedUser?.username}`}
+                      disabled
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="flex justify-center gap-4">
                 {user.roles[0] === "ROLE_GESTIONNAIRE" && (

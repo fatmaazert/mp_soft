@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CloseButton from "../formComponents/CloseButton";
 import { get } from "../../utils/apiMethods";
 
-function UsersModal({ isOpen, onClose, submit }) {
+function UsersModal({ isOpen, onClose, submit, confirmMsg }) {
   const [users, setusers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   useEffect(() => {
@@ -14,8 +14,8 @@ function UsersModal({ isOpen, onClose, submit }) {
     getUsers();
   }, []);
 
-  const onSelectUser = (userId) => {
-    setSelectedUser(userId);
+  const onSelectUser = (user) => {
+    setSelectedUser(user);
   };
 
   const handleClose = () => {
@@ -28,12 +28,12 @@ function UsersModal({ isOpen, onClose, submit }) {
   return (
     <>
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-75 ">
+        <div
+          onClick={onClose}
+          className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-75 "
+        >
           <div className="relative bg-white p-8 rounded-lg w-[1200px] h-[600px] overflow-auto border border-gray-300 shadow-lg">
-            <CloseButton
-              className="absolute top-1 right-2"
-              onClick={handleClose}
-            />
+            <CloseButton className="absolute top-1 right-2" onClick={onClose} />
             <h2 className="mt-2 text-xl text-primary font-semibold mb-4">
               users
             </h2>
@@ -67,8 +67,8 @@ function UsersModal({ isOpen, onClose, submit }) {
                                 className="w-4 h-4"
                                 type="radio"
                                 name="selectedUsers"
-                                checked={selectedUser == user.id}
-                                onChange={() => onSelectUser(user.id)}
+                                checked={selectedUser?.id == user.id}
+                                onChange={() => onSelectUser(user)}
                               />
                             </td>
                           </tr>
@@ -81,6 +81,14 @@ function UsersModal({ isOpen, onClose, submit }) {
                 <>Aucune donnée disponible </>
               )}
             </table>
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded"
+                onClick={handleClose}
+              >
+                {confirmMsg || "Selecter"}
+              </button>
+            </div>
           </div>
         </div>
       )}

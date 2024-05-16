@@ -16,11 +16,20 @@ const AdminGestionDesUsers = React.lazy(() =>
   import("./pages/Gestion_des_Users")
 );
 
-const HomePage = React.lazy(() => import("./pages/Home_Page"));
-const GestionReglePage = React.lazy(() => import("./pages/Gestion_des_regles"));
-const GestionRolePage = React.lazy(() => import("./pages/Gestion_de_roles"));
-const GestionUserPage = React.lazy(() => import("./pages/Gestion_des_Users"));
-const HistoryPage = React.lazy(() => import("./pages/History"));
+const HomePage = React.lazy(() => import("./pages/Home_Page.jsx"));
+const GestionReglePage = React.lazy(() =>
+  import("./pages/Gestion_des_regles.jsx")
+);
+const GestionRolePage = React.lazy(() =>
+  import("./pages/Gestion_de_roles.jsx")
+);
+const GestionUserPage = React.lazy(() =>
+  import("./pages/Gestion_des_Users.jsx")
+);
+const HistoryPage = React.lazy(() => import("./pages/History.jsx"));
+const AllReglesComponent = React.lazy(() =>
+  import("./components/regleComponent/AllReglesComp.jsx")
+);
 
 function App() {
   return (
@@ -44,9 +53,10 @@ function App() {
                 path="validationregles"
                 element={<AdminGestionDesUsers />}
               />
+              <Route path="ajoutregles" element={<GestionReglePage />} />
               <Route path="notification" element={<HistoryPage />} />
 
-              <Route path="gestiondesregles" element={<GestionReglePage />} />
+              <Route path="gestiondesregles" element={<AllReglesComponent />} />
             </Route>
             <Route
               path="*"

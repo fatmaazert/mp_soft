@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const token = JSON.parse(localStorage.getItem("token"));
-export const baseURL = process.env.REACT_APP_NODE_SERVER_HOST;
+export const baseURL = import.meta.env.VITE_APP_NODE_SERVER_HOST;
 const Client = axios.create({
   baseURL,
   headers: {

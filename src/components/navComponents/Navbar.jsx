@@ -5,14 +5,15 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { CiLogout, CiUser } from "react-icons/ci";
 import { useAuth } from "../../hooks/useAuth";
 import { get } from "../../utils/apiMethods";
-import { rules, rulesPath } from "../../constants";
+import { rules, rulesPath } from "../../constants.cjs";
 import { VscBellDot } from "react-icons/vsc";
-import { VscBell } from "react-icons/vsc";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function Navbar() {
-  const [items, setItems] = useState([]);
+  //const [items, setItems] = useState([]);
   const [nav, setNav] = useState(false);
   const { logout, user, token } = useAuth();
+  const [regleList, setRegleList] = useLocalStorage("regleList", null);
 
   useEffect(() => {
     const fetchRules = async () => {
@@ -28,10 +29,10 @@ function Navbar() {
 
         if (!getRules) return;
         const formattedRules = getRules.map((r) => {
-          console.log(rulesPath.find((rule) => rule.rule == r));
           return { text: r, ...rulesPath.find((rule) => rule.rule == r) };
         });
-        setItems(formattedRules);
+        setRegleList(formattedRules);
+        //setItems(formattedRules);
       }
     };
 
@@ -111,7 +112,7 @@ function Navbar() {
               >
                 <CiUser size={25} className="mr-2" /> Modifier mon compte
               </div>
-              {items.map(({ icon, text, path }, index) => {
+              {regleList?.map(({ icon, text, path }, index) => {
                 return (
                   <div key={index} className=" py-4">
                     <li
