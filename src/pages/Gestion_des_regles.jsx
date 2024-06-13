@@ -4,27 +4,47 @@ import IconInput from "../components/formComponents/IconInput";
 import { GrContactInfo } from "react-icons/gr";
 import Button from "../components/formComponents/Button";
 import { toast } from "react-toastify";
-import { get, post } from "../utils/apiMethods";
+import { get, post, remove, update } from "../utils/apiMethods";
 import { typeRegle } from "../utils/listType";
 import { FaEye } from "react-icons/fa";
 import RegleTable from "../components/regleComponent/RegleTable";
 import UsersModal from "../components/Modals/UsersModal";
 import { FaUserTie } from "react-icons/fa6";
 import { useAuth } from "../hooks/useAuth";
-import AllRegles from "../components/regleComponent/AllReglesComp";
-
+import useLocalStorage from "../hooks/useLocalStorage";
+import { useNavigate } from "react-router-dom";
+import { FcConferenceCall } from "react-icons/fc";
+import SearchableDropdown from "../components/SearchComp";
+import { FcRules } from "react-icons/fc";
 function ReglePage() {
   const [RUBINILIST, setRubiniList] = useState([]);
+  const [CODEOPLIST, setCodeList] = useState([]);
+
+  const [selectedRegle, setSelectedRegle] = useLocalStorage(
+    "selectedRegle",
+    null
+  );
+
+  useEffect(() => {
+    async function getCodeOps() {
+      const res = await get("/Regle/codope");
+      if (!res) return;
+      setCodeList(res);
+    }
+    getCodeOps();
+  }, []);
+
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     codope: "",
     lp: "",
     DSC: "",
     ord: "",
-    RUBINI: "",
-    RUBDST: "",
-    SRC: "",
-    CMSR: [],
+    rubini: "",
+    rubdst: "",
+    src: "",
+    opr: "",
+    cmsr: "",
   });
   const [libope, setLibOpe] = useState();
   const [isOpen, setIsOpen] = useState(false);
@@ -63,22 +83,28 @@ function ReglePage() {
   ];
 
   useEffect(() => {
-    const getAllRunibi = async () => {
-      const result = await get(`Table/${formData.codope}`);
-      if (result) {
-        setRubiniList(result);
-      }
-    };
+    if (selectedRegle) {
+      // lowercase everything
 
-    getAllRunibi();
+      setFormData(selectedRegle);
+    }
+  }, [selectedRegle]);
+
+  useEffect(() => {
+    handleSearch();
   }, [formData.codope]);
 
   const handleSearch = async () => {
-    if (!formData.codope) return;
+    if (!formData.codope && !selectedRegle.codope) return;
     try {
       const result = await get(`Regle/tope/${formData.codope}`);
       if (result) {
-        setLibOpe(result[0].LIBOPE);
+        setLibOpe(result[0]?.LIBOPE);
+      }
+
+      const resultRubini = await get(`Table/${formData.codope}`);
+      if (resultRubini) {
+        setRubiniList(resultRubini);
       }
     } catch (error) {
       console.log(error);
@@ -95,18 +121,19 @@ function ReglePage() {
     setFormData({
       ...formData,
       [name]: value,
-      DSC: typeRegle[index].description, // mefemech description lel RUBINI
+      DSC: typeRegle[index].description,
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log({ name, value });
     setFormData({
       ...formData,
       [name]: value,
     });
   };
+
+  const navigate = useNavigate();
 
   const handleOpenPopup = () => {
     setIsOpen(!isOpen);
@@ -118,28 +145,92 @@ function ReglePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await post(`Regle/${selectedUser}/Add-regle`, formData);
-    console.log({ res });
+    // if its an EDIT
+    if (selectedRegle?.mode == "EDIT") {
+      const res = await update(
+        `Regle/modifyRegle/${selectedRegle?.id}/${user?.id}/${selectedUser?.id}`,
+        {
+          ...formData,
+        }
+      );
+      if (!res) {
+        toast.error("erreur regle");
+        return;
+      }
+      setSelectedRegle(null);
+      toast.success("Regle updated successfully");
+      setTimeout(() => navigate("/profile/gestiondesregles"), 1000);
+    } else if (selectedRegle?.mode == "DELETE") {
+      try {
+        await remove(
+          `Regle/remove-regle/${selectedRegle?.id}/${user?.id}/${selectedUser?.id}`
+        );
+        setSelectedRegle(null);
+
+        setTimeout(() => navigate("/profile/gestiondesregles"), 1000);
+      } catch (e) {
+        return;
+      }
+    } else {
+      // verify all the fields should be filled in
+
+      if (
+        formData.codope == "" ||
+        formData.lp == "" ||
+        formData.DSC == "" ||
+        formData.ord == "" ||
+        formData.rubini == "" ||
+        formData.rubdst == "" ||
+        formData.src == "" ||
+        formData?.cmsr == ""
+      ) {
+        toast.error("Veuillez remplir tous les champs");
+        return;
+      }
+      // if there is no selected user error message
+      if (!selectedUser) {
+        toast.error("Veuillez sélectionner un responsable");
+        return;
+      }
+      console.log({ formData });
+      const res = await post(
+        `Regle/${user?.id}/${selectedUser?.id}/Add-regle`,
+        formData
+      );
+      toast.success("Regle Added successfully");
+      navigate("/profile/gestiondesregles");
+      console.log({ res });
+    }
   };
+
+  const handelCodepeChange = (val) => {
+    setFormData({ ...formData, codope: val });
+    handleSearch();
+  };
+
   return (
     <>
-      <AllRegles />
-      <div className="ml-20">
-        <MainTitle opString="Ajout de regles" />
-        <form onSubmit={handleSubmit} className="max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="py-10 bg-gradient-to-r from-teal-800 to-neutral-400">
+        <h1 className="text-3xl mt-4 flex gap-x-1 justify-center items-center bg-gray-300 max-w-7xl mx-auto">
+          <FcRules size={38} />{" "}
+          {selectedRegle?.mode == "EDIT"
+            ? "Demande de modification de regle"
+            : selectedRegle?.mode == "DELETE"
+            ? "Demande de suppression de regle"
+            : "Demande d'ajout d'une regle"}
+        </h1>
+        <form onSubmit={handleSubmit} className="max-w-7xl mt-20 mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:justify-items-center ">
             <div>
               <div className="flex">
                 <div className="pl-2">
-                  <IconInput
-                    className="w-[335px]"
+                  <SearchableDropdown
+                    name="codeope"
                     id="codope"
-                    type="text"
-                    name="codope"
-                    value={formData.codope}
-                    icon={<GrContactInfo />}
-                    onChange={handleInputChange}
-                    placeholder="code Ope"
+                    options={CODEOPLIST}
+                    className="w-[450px] py-2 px-4 mb-2 bg-lightGrey  focus:outline-none rounded-lg	"
+                    selectedVal={formData?.codope}
+                    handleChange={(val) => handelCodepeChange(val)}
                   />
                 </div>
                 <div className="w-full">
@@ -159,7 +250,7 @@ function ReglePage() {
                   type="text"
                   name="libope"
                   value={libope}
-                  onChange={handleInputChange}
+                  disabled
                   icon={<GrContactInfo />}
                   placeholder="lib Ope"
                 />
@@ -167,10 +258,9 @@ function ReglePage() {
               <div className="w-full pl-2">
                 <select
                   name="lp"
-                  value={formData.lp}
+                  value={formData?.lp?.toUpperCase()}
                   onChange={handleType}
                   className="w-[450px] py-2 px-4 mb-2 bg-lightGrey rounded-lg focus:outline-none"
-                  required
                 >
                   <option key={0} value={""}>
                     choisir le type de regle
@@ -195,15 +285,15 @@ function ReglePage() {
                   icon={<GrContactInfo />}
                 />
               </div>
-              <div className="flex justify-center mr-14">
+              <div className="flex justify-center">
                 <div
                   onClick={(e) => handleOpenPopup()}
-                  className="cursor-pointer flex items-center gap-2"
+                  className="cursor-pointer flex flex-col items-center justify-center gap-1 bg-teal-900 w-52 h-36 rounded-md mt-3"
                 >
                   <div>
                     <FaEye size="60px" />
                   </div>
-                  <MainTitle opString={"Consulter"} />
+                  <h2 className="text-gray-50 text-4xl">Consulter </h2>
                 </div>
               </div>
             </div>
@@ -224,15 +314,15 @@ function ReglePage() {
 
               <div className="w-full pl-2">
                 <select
-                  name="RUBINI"
-                  value={formData.RUBINI}
+                  name="rubini"
+                  value={formData.rubini}
                   onChange={handleInputChange}
                   className="w-[450px] py-2 px-4 mb-2 bg-lightGrey rounded-lg focus:outline-none"
                 >
                   <option key={0} value={""}>
                     choisir Rubini
                   </option>
-                  {RUBINILIST.length > 0 &&
+                  {RUBINILIST?.length > 0 &&
                     RUBINILIST?.map((rub, index) => (
                       <option key={index} value={rub}>
                         {rub}
@@ -245,10 +335,10 @@ function ReglePage() {
                 <div className="pl-2">
                   <IconInput
                     className="w-[450px]"
-                    id="RUBDST"
+                    id="rubdst"
                     type="text"
-                    name="RUBDST"
-                    value={formData.RUBDST}
+                    name="rubdst"
+                    value={formData.rubdst}
                     onChange={handleInputChange}
                     icon={<GrContactInfo />}
                     placeholder="RUBDST"
@@ -257,17 +347,19 @@ function ReglePage() {
               </div>
               <div className="w-full pl-2">
                 <select
-                  name="OPR"
-                  value={formData.OPR}
+                  name="opr"
+                  value={formData.opr}
                   onChange={handleInputChange}
                   className="w-[450px] py-2 px-4 mb-2 bg-lightGrey rounded-lg focus:outline-none"
-                  required
                 >
                   <option key={0} value={""}>
                     choisir l OPR
                   </option>
                   <option key={1} value={"="}>
                     = : égal
+                  </option>
+                  <option key={1} value={"=="}>
+                    == : égal strictement
                   </option>
                   <option key={2} value={"!="}>
                     != : différent
@@ -286,74 +378,30 @@ function ReglePage() {
                   </option>
                 </select>
               </div>
-              {/* <div className="flex">
-                <div className="pl-2">
-                  <IconInput
-                    className="w-[450px]"
-                    id="SRC"
-                    disabled
-                    type="text"
-                    name="SRC"
-                    value={formData.SRC}
-                    icon={<GrContactInfo />}
-                    placeholder="SRC"
-                  />
-                </div>
-              </div> */}
+
               <div className="flex">
                 <div className="pl-2">
                   <IconInput
                     className="w-[450px]"
-                    id="SRC"
+                    id="src"
                     type="text"
-                    name="SRC"
-                    value={formData.SRC}
+                    name="src"
+                    value={formData.src}
                     onChange={handleInputChange}
                     icon={<GrContactInfo />}
                     placeholder="SRC"
                   />
                 </div>
               </div>
-              <div className="w-full pl-2">
-                <select
-                  name="SRC"
-                  value={formData.SRC}
-                  onChange={handleInputChange}
-                  className="w-[450px] py-2 px-4 mb-2 bg-lightGrey rounded-lg focus:outline-none"
-                  required
-                >
-                  <option key={0} value={""}>
-                    choisir l Type SRC
-                  </option>
-                  <option key={1} value={"cst "}>
-                    cst : constante 
-                  </option>
-                  <option key={2} value={"var "}>
-                    var : variable 
-                  </option>
-                  <option key={3} value={"sql "}>
-                    sql : requête SQL 
-                  </option>
-                  <option key={4} value={"afp "}>
-                    afp : état  (voir anex1)
-                  </option>
-                  <option key={5} value={"seq"}>
-                    seq séquence 
-                  </option>
-                  <option key={6} value={"obl "}>
-                    obl :
-                  </option>
-                </select>
-              </div>
 
               <div className="flex">
                 <div className="pl-2">
-                  <IconInput
-                    className="w-[450px]"
-                    id="MSGERR"
+                  <textarea
+                    className="w-[450px] h-44 min-h-24 p-2"
+                    id="msgerr"
                     type="text"
-                    name="MSGERR"
-                    value={formData.MSGERR}
+                    name="msgerr"
+                    value={formData.msgerr}
                     onChange={handleInputChange}
                     icon={<GrContactInfo />}
                     placeholder="MSGERR"
@@ -362,11 +410,10 @@ function ReglePage() {
               </div>
               <div className="w-full pl-2">
                 <select
-                  name="CMSR"
-                  value={formData.CMSR}
+                  name="cmsr"
+                  value={formData.cmsr}
                   onChange={handleInputChange}
                   className="w-[450px] py-2 px-4 mb-2 bg-lightGrey rounded-lg focus:outline-none"
-                  required
                 >
                   {CMSRIOptions.map((option, index) => (
                     <option key={index} value={option.value}>
@@ -375,6 +422,19 @@ function ReglePage() {
                   ))}
                 </select>
               </div>
+
+              {selectedUser && (
+                <div className="flex">
+                  <div className="pl-2">
+                    <IconInput
+                      className="w-[450px]"
+                      type="text"
+                      value={`Responsable choisi: ${selectedUser?.username}`}
+                      disabled
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className="flex justify-center gap-4">
                 {user.roles[0] === "ROLE_GESTIONNAIRE" && (
@@ -387,7 +447,11 @@ function ReglePage() {
                 )}
 
                 <button className="bg-sky-600 hover:bg-sky-400 text-white font-bold py-2 px-4 border-b-4 border-sky-700 hover:border-sky-500 rounded">
-                  Ajouter
+                  {selectedRegle?.mode == "EDIT"
+                    ? "Modifier"
+                    : selectedRegle?.mode == "DELETE"
+                    ? "Supprimer"
+                    : "Ajouter"}
                 </button>
               </div>
             </div>

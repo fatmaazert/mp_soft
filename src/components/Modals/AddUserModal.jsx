@@ -1,16 +1,16 @@
 import { RiLockPasswordLine } from "react-icons/ri";
-import AnchorLink from "../formComponents/AnchorLink";
 import Button from "../formComponents/Button";
 import IconInput from "../formComponents/IconInput";
 import Modal from "./Modal";
 import { FaRegUser } from "react-icons/fa";
-import SelectInput from "../formComponents/SelectInput";
 import { BsPersonVcard } from "react-icons/bs";
 import Title from "../formComponents/Title";
 import { useEffect, useState } from "react";
 import { rules } from "../../constants";
 import { toast } from "react-toastify";
 import { post, update } from "../../utils/apiMethods";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import { useAuth } from "../../hooks/useAuth";
 
 const AddUserModal = ({ isOpen, handleClose, userData }) => {
   const [formData, setFormData] = useState({
@@ -22,6 +22,8 @@ const AddUserModal = ({ isOpen, handleClose, userData }) => {
     confirmPassword: "",
     role: "",
   });
+
+  const [user, setUser] = useLocalStorage("user", null);
 
   useEffect(() => {
     if (userData) {
@@ -49,26 +51,38 @@ const AddUserModal = ({ isOpen, handleClose, userData }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response;
-
       if (userData) {
         // get the role id from the user data
         console.log({ role: formData.role, rules });
 
         const roleId = rules.find((rule) => rule.role == formData.role)?.id;
 
-        response = await update("user/update/" + userData.id, {
+        const response = await update("user/update/" + userData.id, {
           username: formData.username,
           email: formData.email,
           roles: [{ id: roleId }],
         });
+
+        if (response) {
+          toast.success("Le compte a été mis à jour");
+          // if the user logged in is the same as the current user updated
+          if (user.id == userData.id) {
+            setUser({ ...response, roles: [response.roles[0]?.name] });
+          }
+          // if the user logged in is not the same as the current user updated
+          else if (user.id != userData.id) {
+            handleClose();
+          }
+          handleClose();
+        }
+        console.log(response);
       } else {
         // check if the confirm password is the same as the current password
         if (formData.password !== formData.confirmPassword) {
           toast.error("Les mots de passe ne sont pas identiques");
           return;
         }
-        response = await post("user/Add-user", {
+        const response = await post("user/Add-user", {
           user: {
             username: formData.username,
             email: formData.email,
@@ -76,18 +90,19 @@ const AddUserModal = ({ isOpen, handleClose, userData }) => {
           },
           role: formData.role,
         });
+        if (response) {
+          handleClose();
+          toast.success("Utilisateur créé avec succès!");
+        }
+        console.log(response);
       }
-      if (response) {
-        handleClose();
-      }
-      console.log(response);
     } catch (error) {
       console.log(error);
       toast.error(`${error}`);
     }
   };
   return (
-    <Modal show={isOpen} close={handleClose} title="Ajout utilisateur">
+    <Modal show={isOpen} close={handleClose} title="">
       <form onSubmit={(e) => handleSubmit(e)} className="mx-auto max-w-md">
         <div>
           <Title className="text-3xl">Information sur le compte</Title>
@@ -162,7 +177,7 @@ const AddUserModal = ({ isOpen, handleClose, userData }) => {
             className="bg-gray-400 text-white w-full"
             onClick={handleClose}
           >
-            Cancel
+            Annuler
           </Button>
           <Button className="bg-primary text-white w-full">
             {userData ? "Modifier" : "Ajouter"}

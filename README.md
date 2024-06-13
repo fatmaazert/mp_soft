@@ -8,11 +8,13 @@
 
 - [x] Gérer le profil : Le système doit permettre à l’utilisateur et à l’administrateur de modifier leurs informations personnelles.
 
-- [ ] Historique : le gestionnaire ou le responsable peut consulter l’historique de ses transactions (ajout, modification, suppression)
+- [x] Add checks in the sigup page
 
-- [ ] Modifier une règle de gestion : Le système doit permettre au gestionnaire de demander la modification d’une règle de gestion existante.
+- [x] Modifier une règle de gestion : Le système doit permettre au gestionnaire de demander la modification d’une règle de gestion existante.
 
-- [ ] Supprimer une règle de gestion : Le système doit permettre au gestionnaire de demander la suppression d’une règle de gestion existante.
+- [x] Supprimer une règle de gestion : Le système doit permettre au gestionnaire de demander la suppression d’une règle de gestion existante.
+
+- [x] Historique : le gestionnaire ou le responsable peut consulter l’historique de ses transactions (ajout, modification, suppression)
 
 - [ ] Valider la création d’une règle de gestion : Le système doit permettre au responsable de valider la création d’une nouvelle règle de gestion.
 

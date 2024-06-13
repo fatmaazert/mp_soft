@@ -7,7 +7,7 @@ import {
   FcReadingEbook,
   FcTodoList,
 } from "react-icons/fc";
-
+import { toast } from "react-toastify";
 const GestionDesRoles = () => {
   const [tasks, setTasks] = useState([]);
   const [adminTasks, setAdminTasks] = useState([]);
@@ -62,6 +62,7 @@ const GestionDesRoles = () => {
     if (result) {
       //setGestionnaireTasks([...gestionnaireTasks, result]);
       setUpdate((prev) => !prev);
+      toast.success("Tâche affectée au rôle avec succès");
     }
   };
 
@@ -82,6 +83,7 @@ const GestionDesRoles = () => {
     if (result) {
       //setGestionnaireTasks([...gestionnaireTasks, result]);
       setUpdate((prev) => !prev);
+      toast.success("Tâche enlevée du rôle avec succès");
     }
   };
 
@@ -183,13 +185,13 @@ const GestionDesRoles = () => {
             onClick={handleAffecter}
             className="bg-green-800 hover:bg-green-600 text-white font-bold py-2 px-10 rounded"
           >
-            affecter
+            Affecter
           </button>
           <button
             onClick={handleEnlever}
             className="bg-red-600 hover:bg-red-400 text-white font-bold py-2 px-10 rounded"
           >
-            enlever
+            Enlever
           </button>
         </div>
       </div>

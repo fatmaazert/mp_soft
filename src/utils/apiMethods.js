@@ -19,16 +19,16 @@ const post = async (url, data, dispatch) => {
 
     response = await Client.post(url, data, {});
 
-    toast.success("Data created successfully", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    // toast.success("", {
+    //   position: "top-right",
+    //   autoClose: 5000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    //   theme: "light",
+    // });
     return response.data;
   } catch (error) {
     console.log({ error });
@@ -96,6 +96,20 @@ const update = async (url, data, dispatch) => {
   }
 };
 
+//update
+const patch = async (url, data, dispatch) => {
+  try {
+    let response;
+
+    response = await Client.patch(url, data);
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 //update for formData/multipart
 const updateMultipart = async (url, data) => {
   try {
@@ -120,7 +134,7 @@ const remove = async (url) => {
     let response;
     response = await Client.delete(url, {});
 
-    toast.success("Deleted successfully", {
+    toast.success("Regle deleted successfully", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -194,4 +208,5 @@ export {
   update,
   updateMultipart,
   logout,
+  patch,
 };

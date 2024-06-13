@@ -43,7 +43,7 @@ export const rulesPath = [
   },
   {
     rule: "Consultation notifications",
-    path: "notification",
+    path: "notifications",
     icon: <IoCreate size={25} className="mr-2" />,
   },
   {

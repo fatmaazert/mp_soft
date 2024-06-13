@@ -4,7 +4,7 @@ import AddUserModal from "../components/Modals/AddUserModal";
 import { get, remove } from "../utils/apiMethods";
 import { useState, useEffect } from "react";
 import ConfirmationModal from "../components/Modals/ConfirmationModal";
-
+import { FaSearch } from "react-icons/fa";
 const UserHeaders = ["Nom d'utilisateur", "Email", "Role", "Actions"];
 
 const GestionDesUsers = () => {

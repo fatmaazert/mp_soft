@@ -21,7 +21,7 @@ function RegleTable({ isOpen, onClose, codope, lp }) {
     <>
       {isOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-500 bg-opacity-75 ">
-          <div className="relative bg-white p-8 rounded-lg w-[1200px] h-[600px] overflow-auto border border-gray-300 shadow-lg">
+          <div className="relative bg-white p-8 rounded-lg w-[1200px] h-[600px] overflow-hidden border border-gray-300 shadow-lg">
             <CloseButton
               className="absolute top-1 right-2"
               onClick={handleClose}
@@ -29,7 +29,7 @@ function RegleTable({ isOpen, onClose, codope, lp }) {
             <h2 className="mt-2 text-xl text-primary font-semibold mb-4">
               informations sur les regles
             </h2>
-            <div className="overflow-auto">
+            <div className="overflow-auto max-h-[500px]">
               <table className="border-collapse table-auto bg-white">
                 <thead>
                   <tr className="text-left">

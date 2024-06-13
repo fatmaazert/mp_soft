@@ -130,7 +130,7 @@ function Compte() {
               {}
             </div>
             <Button type="submit" className="bg-primary text-white w-full">
-              Update
+              Modifier
             </Button>
           </form>
         </div>
